@@ -46,16 +46,16 @@ public class Graph
 		{
 			for (int i = 0; i < nNodes; i++)
 			{
-				if (distances[source][source + 1] > 0)
+				if (distances[source][i] > 0)
 				{
 					pQ.enqueue(i, distances[source][i]);
 					pQ.blockInFuture(i);
+					//ar[i]=?????
 				}
 			}
 			pQ.pop();
 		}
 		// vi)
-		Arrays.sort(ar);
-		return ar[0];
+		return ar[target];
 	}
 }
