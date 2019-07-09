@@ -56,14 +56,37 @@ public class Power implements ComputationalNode
 		return false;
 	}
 
-	
-	public boolean equals(Object obj)
-	{
-		return (this == obj);
-	}
-	
+	@Override
 	public int hashCode()
 	{
-		return -1;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((child == null) ? 0 : child.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(power);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Power other = (Power) obj;
+		if (child == null)
+		{
+			if (other.child != null)
+				return false;
+		}
+		else if (!child.equals(other.child))
+			return false;
+		if (Double.doubleToLongBits(power) != Double.doubleToLongBits(other.power))
+			return false;
+		return true;
 	}
 }

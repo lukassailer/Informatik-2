@@ -2,24 +2,19 @@ package main;
 
 import java.util.Map;
 
-public class Constant implements ComputationalNode
+public class Cosine implements ComputationalNode
 {
-	private double value;
+	private ComputationalNode x;
 
-	public Constant(double value)
+	public Cosine(ComputationalNode x)
 	{
-		this.value = value;
-	}
-	
-	public String toString()
-	{
-		return Double.toString(value);
+		this.x = x;
 	}
 
 	@Override
 	public double evaluate(String unknowns)
 	{
-		return value;
+		return Math.cos(x.evaluate(unknowns));
 	}
 
 	@Override
@@ -31,25 +26,28 @@ public class Constant implements ComputationalNode
 	@Override
 	public ComputationalNode derivative(String unknown)
 	{
-		return new Constant(0);
+		return new Multiply(new Multiply(new Constant(-1), new Sine(x)), x.derivative(unknown));
 	}
 
 	@Override
 	public ComputationalNode cleanUp()
 	{
-		return new Constant(value);
+		x.cleanUp();
+		if (x.isOne())
+			return new Constant(1);
+		return new Cosine(x);
 	}
 
 	@Override
 	public boolean isZero()
 	{
-		return (value == 0);
+		return false;
 	}
 
 	@Override
 	public boolean isOne()
 	{
-		return (value == 1);
+		return (cleanUp().isOne());
 	}
 
 	@Override
@@ -57,9 +55,7 @@ public class Constant implements ComputationalNode
 	{
 		final int prime = 31;
 		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(value);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((x == null) ? 0 : x.hashCode());
 		return result;
 	}
 
@@ -72,9 +68,15 @@ public class Constant implements ComputationalNode
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Constant other = (Constant) obj;
-		if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value))
+		Cosine other = (Cosine) obj;
+		if (x == null)
+		{
+			if (other.x != null)
+				return false;
+		}
+		else if (!x.equals(other.x))
 			return false;
 		return true;
 	}
+
 }
