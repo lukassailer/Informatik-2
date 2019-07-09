@@ -60,4 +60,14 @@ public class Divide implements ComputationalNode
 	{
 		return false;
 	}
+	
+	public boolean equals(Object obj)
+	{
+		return (this == obj);
+	}
+	
+	public int hashCode()
+	{
+		return -1;
+	}
 }

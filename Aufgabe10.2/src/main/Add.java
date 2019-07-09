@@ -43,10 +43,6 @@ public class Add implements ComputationalNode
 		right = right.cleanUp();
 		if (left instanceof Constant && right instanceof Constant)
 			return new Constant(this.evaluate(""));// beides Konstanten also kein unknows nötig
-		/*else if (!(left instanceof Constant))
-			return new Add(left.cleanUp(), right);
-		else if (!(right instanceof Constant))
-			return new Add(left, right.cleanUp());*/
 		return this;
 	}
 
@@ -62,4 +58,13 @@ public class Add implements ComputationalNode
 		return false;
 	}
 
+	public boolean equals(Object obj)
+	{
+		return (this == obj);
+	}
+	
+	public int hashCode()
+	{
+		return -1;
+	}
 }

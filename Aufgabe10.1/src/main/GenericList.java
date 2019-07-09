@@ -104,6 +104,10 @@ public class GenericList<E> implements List<E>
 	@Override
 	public E get(int arg0)
 	{
+		if (arg0 >= firstEmptyIdx)
+		{
+			throw new IndexOutOfBoundsException("get Index too big!");
+		}
 		return data[arg0];
 	}
 
@@ -138,25 +142,39 @@ public class GenericList<E> implements List<E>
 	@Override
 	public boolean remove(Object arg0)
 	{
-		remove(indexOf(arg0));
+		int idx = indexOf(arg0);
+		if (idx != -1)
+			remove(indexOf(arg0));
 		return true;
 	}
 
 	@Override
 	public E remove(int arg0)
 	{
-		// am Index entfernen un aufrücken (Idx-1 nicht vergessen)
-		return null;
+		if (arg0 >= firstEmptyIdx)
+			throw new IndexOutOfBoundsException("remove Index too big!");
+		else
+		{
+			E tmp = data[arg0];
+			for (int i = arg0; i < firstEmptyIdx; i++)
+			{
+				data[i] = data[i + 1];
+			}
+			firstEmptyIdx--;
+			return tmp;
+		}
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> arg0)
 	{
-		for (Object elt : arg0)
+		E[] olddata = data;
+		Object[] tmp = arg0.toArray();
+		for (int i = 0; i < arg0.size(); i++)
 		{
-			remove(elt);
+			remove(tmp[i]);
 		}
-		return true;
+		return (!(Arrays.equals(olddata, data)));
 	}
 
 	@Override
@@ -169,8 +187,13 @@ public class GenericList<E> implements List<E>
 	@Override
 	public E set(int arg0, E arg1)
 	{
-		// TODO
-		return null;
+		if (arg0 > firstEmptyIdx)
+			throw new IndexOutOfBoundsException("set Index too big!");
+		else if (arg0 == firstEmptyIdx)
+			add(arg1);
+		E tmp = data[arg0];
+		data[arg0] = arg1;
+		return tmp;
 	}
 
 	@Override
@@ -182,9 +205,9 @@ public class GenericList<E> implements List<E>
 	@Override
 	public List<E> subList(int arg0, int arg1)
 	{
-		// TODO
-		// Hint you can use subList method from Array.asList(data)
-		return null;
+		if (arg0 < 0 || arg1 > firstEmptyIdx || arg0 > arg1)
+			throw new IndexOutOfBoundsException("illegal subList Index!");
+		return Arrays.asList(data).subList(arg0, arg1);
 	}
 
 	@Override
@@ -196,7 +219,21 @@ public class GenericList<E> implements List<E>
 	@Override
 	public <T> T[] toArray(T[] arg0)
 	{
-		return (T[]) toArray();
+		int ld = data.length;
+		int l0 = arg0.length;
+		if (ld == l0)
+			return (T[]) toArray();
+		else if (l0 < ld)
+			return (T[]) Arrays.copyOf(data, ld);
+		else
+		{
+			for (int i = 0; i < ld; i++)
+			{
+				arg0[i] = (T) data[i];
+			}
+			arg0[ld] = null;
+			return arg0;
+		}
 	}
 
 	////////////////////// You dont have to touch the following code ///////////////

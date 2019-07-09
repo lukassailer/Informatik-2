@@ -52,4 +52,13 @@ public class Constant implements ComputationalNode
 		return (value == 1);
 	}
 
+	public boolean equals(Object obj)
+	{
+		return (this == obj);
+	}
+	
+	public int hashCode()
+	{
+		return -1;
+	}
 }

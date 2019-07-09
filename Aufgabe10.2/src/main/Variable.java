@@ -1,6 +1,7 @@
 package main;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class Variable implements ComputationalNode
 {
@@ -63,4 +64,13 @@ public class Variable implements ComputationalNode
 		return false;
 	}
 
+	public boolean equals(Object obj)
+	{
+		return (this == obj);
+	}
+	
+	public int hashCode()
+	{
+		return -1;
+	}
 }
